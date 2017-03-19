@@ -1,0 +1,81 @@
+#!/bin/python
+################################################################################
+#                                                                              #
+#    Copyright (C) 2016  Pranav Mirajkar                                       #
+#                                                                              #
+#    This program is free software: you can redistribute it and/or modif       #
+#    it under the terms of the GNU General Public License as published by      #
+#    the Free Software Foundation, either version 3 of the License, or         #
+#    (at your option) any later version.                                       #
+#                                                                              #
+#    This program is distributed in the hope that it will be useful,           #
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of            #
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             #
+#    GNU General Public License for more details.                              #
+#                                                                              #
+#    You should have received a copy of the GNU General Public License         #
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     #
+#                                                                              #
+################################################################################
+
+import sys
+import argparse
+import random
+
+class Individual(object):
+  def __init__(self, geneSize):
+    self.geneSize = geneSize
+    self.genes = []
+    for i in range(geneSize):
+      self.genes.append(bytes(bytearray([random.randint(0, 255)])))
+      
+  def __str__(self):
+    str = ""
+    for gene in self.genes:
+      str = str +gene.encode('hex')
+    return "0x" + str
+  
+class Population(object):
+  def createIndividuals(self, size):
+    return [Individual(2) for i in range(size)]
+
+class Fitness(object):
+  def getFitness(self):
+    return 0
+    
+class Algorithm(object):
+  # TODO select certain number from previous generation
+  def selection(self, Individual):
+    return Individual
+  # TODO  implement crossover
+  def recombination(self, Individual):
+    return Individual
+
+class GeneticAlgorithm:
+  def cliArgParser(self, argv):
+    parser = argparse.ArgumentParser(description='Genetic Algorithm')
+    parser.add_argument('population size', metavar='size', type=int,
+                      help='Starting Population Size')
+    parser.add_argument('generations', metavar='n', type=int,
+                      help='Generations')                    
+    args = parser.parse_args()
+    self.size = int(argv[1])
+    self.n = int(argv[2])
+    
+  def run(self, argv):
+    self.cliArgParser(argv)
+    individual = []
+    pop = Population()
+    algo = Algorithm()
+  
+    individual = pop.createIndividuals(self.size)
+  
+    for i in range(0, self.n):
+      individual = algo.selection(individual)
+      individual = algo.recombination(individual)
+    
+    for i in individual:
+      print i
+    
+if __name__=='__main__':
+  GeneticAlgorithm().run(sys.argv)
